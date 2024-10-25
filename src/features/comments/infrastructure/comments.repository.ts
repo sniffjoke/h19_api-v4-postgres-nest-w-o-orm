@@ -1,26 +1,83 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { PostCreateModel, PostCreateModelWithParams } from '../../posts/api/models/input/create-post.input.model';
+import { CommentCreateModel } from '../api/models/input/create-comment.input.model';
+import { CommentatorInfoModel, LikesInfo } from '../api/models/output/comment.view.model';
 
 
 @Injectable()
 export class CommentsRepository {
-    constructor(
-    ) {
-    }
+  constructor(
+    @InjectDataSource() private readonly dataSource: DataSource,
+  ) {
+  }
 
-    async findCommentById(id: string) {
-        // if (!isValidObjectId(id)) {
-        //     throw new NotFoundException(`Comment with id ${id} not found`);
-        // }
-        // const findedComment = this.commentModel.findById(id)
-        // if (!findedComment) {
-        //     throw new NotFoundException(`Could not find comment with id ${id}`)
-        // }
-        // return findedComment
-    }
+  async createComment(comment: CommentCreateModel, commentatorInfo: CommentatorInfoModel, likesInfo: LikesInfo) {
+    const newPost = await this.dataSource.query(
+      `
+                    INSERT INTO comments (
+                      "content", 
+                      "commentatorInfoUserId", 
+                      "commentatorInfoUserLogin", 
+                      "likesInfoLikesCount", 
+                      "likesInfoDislikesCount" 
+                      )
+                    VALUES ($1, $2, $3, $4, $5)
+                    RETURNING *
+          `,
+      [
+        comment.content,
+        commentatorInfo.userId,
+        commentatorInfo.userLogin,
+        likesInfo.likesCount,
+        likesInfo.dislikesCount
+      ],
+    );
+    return newPost[0].id;
+  }
 
-    async saveComment(comment: any) {
-        const saveComment = await comment.save()
-        return saveComment
+  async findCommentById(id: string) {
+    const findedComment = await this.dataSource.query(
+      `
+                    SELECT * 
+                    FROM comments 
+                    WHERE "id" = $1          
+          `,
+      [id],
+    );
+    if (!findedComment.length) {
+      throw new NotFoundException(`Could not find comment with id ${id}`);
     }
+    return findedComment[0];
+  }
+
+  async updateComment(commentId: string, dto: CommentCreateModel) {
+    const findedComment = await this.findCommentById(commentId);
+    const updateComment = await this.dataSource.query(
+      `
+                    UPDATE comments
+                    SET "content" = $1
+                    WHERE "id" = $2          
+          `,
+      [
+        dto.content,
+        commentId
+      ],
+    );
+    return updateComment;
+  }
+
+  async deleteComment(commentId: string) {
+    const findedComment = await this.findCommentById(commentId);
+    const deleteComment = await this.dataSource.query(
+      `
+                    DELETE FROM comments 
+                    WHERE "id" = $1
+                `,
+      [commentId],
+    );
+    return deleteComment;
+  }
 
 }

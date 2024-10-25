@@ -37,7 +37,7 @@ export class PostsRepository {
                     FROM posts 
                     WHERE "id" = $1          
           `,
-      [id],
+      [id]
     );
     if (!findedPost.length) {
       throw new NotFoundException(`Post with id ${id} not found`);
