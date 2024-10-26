@@ -13,25 +13,23 @@ export class CommentsRepository {
   ) {
   }
 
-  async createComment(comment: CommentCreateModel, commentatorInfo: CommentatorInfoModel, likesInfo: LikesInfo) {
+  async createComment(comment: CommentCreateModel, commentatorInfo: CommentatorInfoModel, postId: string) {
     const newPost = await this.dataSource.query(
       `
                     INSERT INTO comments (
                       "content", 
                       "commentatorInfoUserId", 
-                      "commentatorInfoUserLogin", 
-                      "likesInfoLikesCount", 
-                      "likesInfoDislikesCount" 
+                      "commentatorInfoUserLogin",
+                      "postId" 
                       )
-                    VALUES ($1, $2, $3, $4, $5)
+                    VALUES ($1, $2, $3, $4)
                     RETURNING *
           `,
       [
         comment.content,
         commentatorInfo.userId,
         commentatorInfo.userLogin,
-        likesInfo.likesCount,
-        likesInfo.dislikesCount
+        postId
       ],
     );
     return newPost[0].id;

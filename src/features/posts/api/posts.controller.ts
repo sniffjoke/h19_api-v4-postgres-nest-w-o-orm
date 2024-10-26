@@ -59,23 +59,25 @@ export class PostsController {
     return deletePost;
   }
 
-  @Post(':id/comments')
+  @Post('posts/:id/comments')
   @UseGuards(JwtAuthGuard)
-  async createComment(@Body() dto: CommentCreateModel, @Param('id') id: string, @Req() req: Request) {
-    // const commentId = await this.commentsService.createComment(dto, id, req.headers.authorization as string);
+  async createComment(@Body() dto: CommentCreateModel, @Param('id') postId: string, @Req() req: Request) {
+    const commentId = await this.commentsService.createComment(dto, postId, req.headers.authorization as string);
     // const newComment = await this.commentsQueryRepository.commentOutput(commentId);
     // const newCommentData = this.commentsService.addStatusPayload(newComment as any)
     // return newCommentData;
+    return commentId
   }
 
-  @Get(':id/comments')
+  @Get('posts/:id/comments')
   async getAllCommentsByPostId(@Param('id') id: string, @Query() query: any, @Req() req: Request) {
-    // const comments = await this.commentsQueryRepository.getAllCommentByPostIdWithQuery(query, id);
-    // const commentsMap = await this.commentsService.generateCommentsData(comments.items, req.headers.authorization as string)
-    // return {
-    //   ...comments,
-    //   items: commentsMap
-    // }
+    const comments = await this.commentsQueryRepository.getAllCommentByPostIdWithQuery(query, id);
+    const commentsMap = await this.commentsService.generateCommentsData(comments.items, req.headers.authorization as string)
+    return {
+      ...comments,
+      items: commentsMap
+    }
+    // return comments;
   }
 
   @Put(':id/like-status')

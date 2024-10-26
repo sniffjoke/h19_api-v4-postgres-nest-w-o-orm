@@ -27,7 +27,7 @@ export class BlogsQueryRepository {
         generateQuery.searchNameTerm,
         (generateQuery.page - 1) * generateQuery.pageSize,
         generateQuery.pageSize,
-      ],
+      ]
     );
     const itemsOutput = items.map(item => this.blogOutputMap(item));
     const resultBlogs = new PaginationBaseModel<BlogViewModel>(generateQuery, itemsOutput);
@@ -44,7 +44,7 @@ export class BlogsQueryRepository {
             `,
       [
         '%' + searchNameTerm + '%',
-      ],
+      ]
     );
     const pageSize = query.pageSize ? +query.pageSize : 10;
     const pagesCount = Math.ceil(Number(totalCount[0].count) / pageSize);
@@ -65,7 +65,7 @@ export class BlogsQueryRepository {
       `
             SELECT * FROM blogs 
             WHERE id=${id}
-          `,
+          `
     );
     if (!findedBlog.length) {
       throw new NotFoundException(`Blog with id ${id} not found`);
