@@ -110,7 +110,6 @@ export class CommentsService {
     } else {
       user = null
     }
-
     // const likeStatus = await this.likeModel.findOne({ commentId: item.id, userId: isUserExists?._id });
     const likeStatus = await this.dataSource.query(
       `

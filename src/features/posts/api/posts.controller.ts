@@ -63,10 +63,10 @@ export class PostsController {
   @UseGuards(JwtAuthGuard)
   async createComment(@Body() dto: CommentCreateModel, @Param('id') postId: string, @Req() req: Request) {
     const commentId = await this.commentsService.createComment(dto, postId, req.headers.authorization as string);
-    // const newComment = await this.commentsQueryRepository.commentOutput(commentId);
-    // const newCommentData = this.commentsService.addStatusPayload(newComment as any)
-    // return newCommentData;
-    return commentId
+    const newComment = await this.commentsQueryRepository.commentOutput(commentId);
+    const newCommentData = this.commentsService.addStatusPayload(newComment)
+    return newCommentData;
+    // return commentId
   }
 
   @Get('posts/:id/comments')
