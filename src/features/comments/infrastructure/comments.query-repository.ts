@@ -19,7 +19,7 @@ export class CommentsQueryRepository {
 
     async getAllCommentByPostIdWithQuery(query: any, postId: string) {
         const generateQuery = await this.generateQuery(query, postId)
-        // const post = await this.postModel.findById(postId)
+        const findedPost = await this.commentOutput(postId)
         const comments = await this.dataSource.query(
           `
                 SELECT * 

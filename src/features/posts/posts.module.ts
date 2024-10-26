@@ -7,12 +7,15 @@ import { BlogsModule } from "../blogs/blogs.module";
 import { CommentsModule } from "../comments/comments.module";
 import { UsersModule } from '../users/users.module';
 import { TokensService } from '../tokens/application/tokens.service';
+import { LikeHandler } from '../likes/domain/like.handler';
+import { LikesModule } from '../likes/likes.module';
 
 @Module({
   imports: [
     forwardRef(() => BlogsModule),
     CommentsModule,
     UsersModule,
+    LikesModule
   ],
   controllers: [PostsController],
   providers: [

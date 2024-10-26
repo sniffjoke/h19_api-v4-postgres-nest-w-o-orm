@@ -23,7 +23,7 @@ export class LikeHandler {
         post.id,
       ],
     );
-    if (isLikeObjectForCurrentUserExists === null) {
+    if (!isLikeObjectForCurrentUserExists.length) {
       const newLike = await this.dataSource.query(
         `
                 INSERT INTO likes ("status", "userId", "postId") 
@@ -61,15 +61,14 @@ export class LikeHandler {
           findedLike.id,
         ],
       );
-      const dislikeCount = post.extendedLikesInfo.dislikesCount;
-      const likeCount = post.extendedLikesInfo.likesCount;
+      const dislikeCount = post.extendedLikesInfoDislikesCount;
+      const likeCount = post.extendedLikesInfoLikesCount;
       if (likeStatus === LikeStatus.Like) {
         if (dislikeCount > 0 && findedLike?.status === LikeStatus.Dislike) {
           const updatePostInfo = await this.dataSource.query(
             `
                     UPDATE posts 
-                    SET "extendedLikesInfoLikesCount" =+ 1,
-                    SET "extendedLikesInfoDislikesCount" =- 1,
+                    SET "extendedLikesInfoLikesCount" =+ 1, "extendedLikesInfoDislikesCount" =- 1
                     WHERE "id" = $1
             `,
             [post.id],
@@ -78,7 +77,7 @@ export class LikeHandler {
           const updatePostInfo = await this.dataSource.query(
             `
                     UPDATE posts 
-                    SET "extendedLikesInfoLikesCount" =+ 1,
+                    SET "extendedLikesInfoLikesCount" =+ 1
                     WHERE "id" = $1
             `,
             [post.id]
@@ -90,8 +89,7 @@ export class LikeHandler {
           const updatePostInfo = await this.dataSource.query(
             `
                     UPDATE posts 
-                    SET "extendedLikesInfoLikesCount" =- 1,
-                    SET "extendedLikesInfoDislikesCount" =+ 1,
+                    SET "extendedLikesInfoLikesCount" =- 1, "extendedLikesInfoDislikesCount" =+ 1
                     WHERE "id" = $1
             `,
             [post.id],
@@ -100,7 +98,7 @@ export class LikeHandler {
           const updatePostInfo = await this.dataSource.query(
             `
                     UPDATE posts 
-                    SET "extendedLikesInfoDislikesCount" =+ 1,
+                    SET "extendedLikesInfoDislikesCount" =+ 1
                     WHERE "id" = $1
             `,
             [post.id]
@@ -112,7 +110,7 @@ export class LikeHandler {
           const updatePostInfo = await this.dataSource.query(
             `
                     UPDATE posts 
-                    SET "extendedLikesInfoLikesCount" =- 1,
+                    SET "extendedLikesInfoLikesCount" =- 1
                     WHERE "id" = $1
             `,
             [post.id]
@@ -121,7 +119,7 @@ export class LikeHandler {
           const updatePostInfo = await this.dataSource.query(
             `
                     UPDATE posts 
-                    SET "extendedLikesInfoDislikesCount" =- 1,
+                    SET "extendedLikesInfoDislikesCount" =- 1
                     WHERE "id" = $1
             `,
             [post.id]
@@ -188,8 +186,7 @@ export class LikeHandler {
           const updateCommentInfo = await this.dataSource.query(
             `
                     UPDATE comments 
-                    SET "likesInfoLikesCount" =+ 1,
-                    SET "likesInfoDislikesCount" =- 1,
+                    SET "likesInfoLikesCount" =+ 1, "likesInfoDislikesCount" =- 1
                     WHERE "id" = $1
             `,
             [comment.id],
@@ -198,7 +195,7 @@ export class LikeHandler {
           const updateCommentInfo = await this.dataSource.query(
             `
                     UPDATE comments 
-                    SET "likesInfoLikesCount" =+ 1,
+                    SET "likesInfoLikesCount" =+ 1
                     WHERE "id" = $1
             `,
             [comment.id]
@@ -210,8 +207,7 @@ export class LikeHandler {
           const updateCommentInfo = await this.dataSource.query(
             `
                     UPDATE comments 
-                    SET "likesInfoLikesCount" =- 1,
-                    SET "likesInfoDislikeCount" =+ 1,
+                    SET "likesInfoLikesCount" =- 1, "likesInfoDislikeCount" =+ 1
                     WHERE "id" = $1
             `,
             [comment.id],
@@ -220,7 +216,7 @@ export class LikeHandler {
           const updateCommentInfo = await this.dataSource.query(
             `
                     UPDATE comments 
-                    SET "likesInfoDislikesCount" =+ 1,
+                    SET "likesInfoDislikesCount" =+ 1
                     WHERE "id" = $1
             `,
             [comment.id]
@@ -232,7 +228,7 @@ export class LikeHandler {
           const updateCommentInfo = await this.dataSource.query(
             `
                     UPDATE comments 
-                    SET "likesInfoLikesCount" =- 1,
+                    SET "likesInfoLikesCount" =- 1
                     WHERE "id" = $1
             `,
             [comment.id]
@@ -241,7 +237,7 @@ export class LikeHandler {
           const updateCommentInfo = await this.dataSource.query(
             `
                     UPDATE comments 
-                    SET "likesInfoDislikesCount" =- 1,
+                    SET "likesInfoDislikesCount" =- 1
                     WHERE "id" = $1
             `,
             [comment.id]

@@ -6,6 +6,7 @@ import { TokensService } from '../../tokens/application/tokens.service';
 import { PostViewModel } from '../api/models/output/post.view.model';
 import { UsersService } from '../../users/application/users.service';
 import { BlogsRepository } from '../../blogs/infrastructure/blogs.repository';
+import { UsersRepository } from '../../users/infrastructure/users.repository';
 
 @Injectable()
 export class PostsService {
@@ -13,7 +14,7 @@ export class PostsService {
         private readonly postsRepository: PostsRepository,
         private readonly blogsService: BlogsService,
         private readonly tokensService: TokensService,
-        private readonly usersService: UsersService,
+        private readonly usersRepository: UsersRepository,
         private readonly blogsRepository: BlogsRepository,
     ) {
     }
@@ -43,17 +44,14 @@ export class PostsService {
     }
 
     async updatePostByIdWithLikeStatus(bearerHeader: string, postId: string) {
-        // const token = this.tokensService.getToken(bearerHeader);
-        // const decodedToken: any = this.tokensService.decodeToken(token);
-        // const user: HydratedDocument<User> | null = await this.usersService.findUserById(decodedToken?._id);
-        // const findedPost = await this.postsRepository.findPostById(postId);
-        // if (!findedPost) {
-        //     throw new NotFoundException(`Post with id ${postId} not found`)
-        // }
-        // return {
-        //     findedPost,
-        //     user
-        // }
+        const token = this.tokensService.getToken(bearerHeader);
+        const decodedToken: any = this.tokensService.decodeToken(token);
+        const user = await this.usersRepository.findUserById(decodedToken?._id);
+        const findedPost = await this.postsRepository.findPostById(postId);
+        return {
+            findedPost,
+            user
+        }
     }
 
     async generatePostsWithLikesDetails(items: PostCreateModel[], bearerToken: string) {

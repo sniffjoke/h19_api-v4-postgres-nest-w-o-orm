@@ -8,6 +8,7 @@ import { CommentsQueryRepository } from '../../comments/infrastructure/comments.
 import { BasicAuthGuard } from '../../../core/guards/basic-auth.guard';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../../../core/guards/jwt-auth.guard';
+import { LikeHandler } from '../../likes/domain/like.handler';
 
 @Controller()
 export class PostsController {
@@ -16,6 +17,7 @@ export class PostsController {
     private readonly postsQueryRepository: PostsQueryRepository,
     private readonly commentsService: CommentsService,
     private readonly commentsQueryRepository: CommentsQueryRepository,
+    private readonly likeHandler: LikeHandler
   ) {
 
   }
@@ -80,12 +82,12 @@ export class PostsController {
     // return comments;
   }
 
-  @Put(':id/like-status')
+  @Put('posts/:id/like-status')
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
   async updatePostByIdWithLikeStatus(@Body() like: any, @Param('id') postId: string, @Req() req: Request) {
-    // const { findedPost, user} = await this.postsService.updatePostByIdWithLikeStatus(req.headers.authorization as string, postId);
-    // return await this.likeHandler.postHandler(req.body.likeStatus, findedPost!, user!);
+    const { findedPost, user} = await this.postsService.updatePostByIdWithLikeStatus(req.headers.authorization as string, postId);
+    return await this.likeHandler.postHandler(req.body.likeStatus, findedPost, user);
   }
 
 }
