@@ -51,7 +51,6 @@ export class CommentsRepository {
   }
 
   async updateComment(commentId: string, dto: CommentCreateModel) {
-    const findedComment = await this.findCommentById(commentId);
     const updateComment = await this.dataSource.query(
       `
                     UPDATE comments
@@ -67,7 +66,7 @@ export class CommentsRepository {
   }
 
   async deleteComment(commentId: string) {
-    const findedComment = await this.findCommentById(commentId);
+    // const findedComment = await this.findCommentById(commentId);
     const deleteComment = await this.dataSource.query(
       `
                     DELETE FROM comments 

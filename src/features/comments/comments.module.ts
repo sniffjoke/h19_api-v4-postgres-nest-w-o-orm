@@ -7,6 +7,7 @@ import { PostsModule } from "../posts/posts.module";
 import { UsersModule } from '../users/users.module';
 import { TokensService } from '../tokens/application/tokens.service';
 import { UsersRepository } from '../users/infrastructure/users.repository';
+import { UsersCheckHandler } from '../users/domain/users.check-handler';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { UsersRepository } from '../users/infrastructure/users.repository';
     CommentsRepository,
     CommentsQueryRepository,
     TokensService,
-    UsersRepository
+    UsersRepository,
+    UsersCheckHandler
   ],
   exports: [
     CommentsService,
