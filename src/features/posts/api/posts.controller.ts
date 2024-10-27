@@ -9,6 +9,7 @@ import { BasicAuthGuard } from '../../../core/guards/basic-auth.guard';
 import { Request } from 'express';
 import { JwtAuthGuard } from '../../../core/guards/jwt-auth.guard';
 import { LikeHandler } from '../../likes/domain/like.handler';
+import { CreateLikeInput } from '../../likes/api/models/input/create-like.input.model';
 
 @Controller()
 export class PostsController {
@@ -87,9 +88,9 @@ export class PostsController {
   @Put('posts/:id/like-status')
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
-  async updatePostByIdWithLikeStatus(@Body() like: any, @Param('id') postId: string, @Req() req: Request) {
+  async updatePostByIdWithLikeStatus(@Body() like: CreateLikeInput, @Param('id') postId: string, @Req() req: Request) {
     const { findedPost, user} = await this.postsService.updatePostByIdWithLikeStatus(req.headers.authorization as string, postId);
-    return await this.likeHandler.postHandler(req.body.likeStatus, findedPost, user);
+    return await this.likeHandler.postHandler(like.likeStatus, findedPost, user);
   }
 
 }
