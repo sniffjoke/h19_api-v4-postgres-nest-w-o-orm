@@ -129,9 +129,7 @@ export class PostsQueryRepository {
       blogName,
       extendedLikesInfo: {
         likesCount: 0,
-        dislikesCount: 0,
-        newestLikes: [],
-        myStatus: 'None',
+        dislikesCount: 0
       },
       createdAt,
     };
