@@ -57,24 +57,28 @@ export class PostsService {
   async generatePostsWithLikesDetails(items: PostCreateModel[], bearerToken: string) {
     const newItems = await Promise.all(
       items.map(async (item) => {
-            return this.generateOnePostWithLikesDetails(item, bearerToken)
-        }
-      )
-    )
-    return newItems
+          return this.generateOnePostWithLikesDetails(item, bearerToken);
+        },
+      ),
+    );
+    return newItems;
   }
 
   async generateOnePostWithLikesDetails(post: any, bearerHeader: string) {
     // const isUserExists = await this.usersRepository.findUserByToken(bearerHeader)
     let user;
     if (bearerHeader) {
-      const token = this.tokensService.getToken(bearerHeader);
-      const decodedToken = this.tokensService.decodeToken(token);
-      user = await this.usersRepository.findUserByIdOrNull(decodedToken._id);
+      try {
+        const token = this.tokensService.getToken(bearerHeader);
+        const decodedToken = this.tokensService.decodeToken(token);
+        user = await this.usersRepository.findUserByIdOrNull(decodedToken._id);
+      } catch {
+        user = null;
+      }
+
     } else {
       user = null;
     }
-    // const likeStatus = await this.likeModel.findOne({userId: isUserExists?._id, postId: post.id})
     const likeStatus = await this.dataSource.query(
       `
             SELECT "status"
@@ -94,12 +98,6 @@ export class PostsService {
           `,
       [post.id, LikeStatus.Like],
     );
-    // const likeDetails = await this.likeModel.find({
-    //     postId: post.id,
-    //     status: LikeStatus.Like
-    // })
-    //   .limit(3)
-    //   .sort({createdAt: -1})
     const likeDetailsMap = await Promise.all(
       likeDetails.map(async (like: any) => {
         const user = await this.usersRepository.findUserById(like.userId);

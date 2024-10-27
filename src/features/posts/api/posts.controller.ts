@@ -30,7 +30,6 @@ export class PostsController {
       ...posts,
       items: newData
     };
-    // return posts
   }
 
   @Post('sa/posts')
@@ -40,7 +39,7 @@ export class PostsController {
     const newPost = await this.postsQueryRepository.postOutput(postId);
     const postWithDetails = await this.postsService.generateOnePostWithLikesDetails(newPost, req.headers.authorization as string)
     return postWithDetails;
-    // return newPost;
+    // return newPost
   }
 
   @Get('posts/:id')
@@ -73,7 +72,6 @@ export class PostsController {
     const newComment = await this.commentsQueryRepository.commentOutput(commentId);
     const newCommentData = this.commentsService.addStatusPayload(newComment)
     return newCommentData;
-    // return commentId
   }
 
   @Get('posts/:id/comments')
@@ -84,7 +82,6 @@ export class PostsController {
       ...comments,
       items: commentsMap
     }
-    // return comments;
   }
 
   @Put('posts/:id/like-status')
