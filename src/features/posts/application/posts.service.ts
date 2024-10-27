@@ -110,7 +110,7 @@ export class PostsService {
         };
       }),
     );
-    const myStatus = user && likeStatus ? likeStatus?.status : LikeStatus.None;
+    const myStatus = user && likeStatus ? likeStatus[0].status : LikeStatus.None;
     const postDataWithInfo = this.statusAndNewLikesPayload(post, myStatus, likeDetailsMap);
     return postDataWithInfo;
   }

@@ -58,7 +58,7 @@ export class LikeHandler {
         `,
         [
           likeStatus,
-          findedLike.id,
+          findedLike[0].id,
         ],
       );
       const dislikeCount = post.extendedLikesInfoDislikesCount;

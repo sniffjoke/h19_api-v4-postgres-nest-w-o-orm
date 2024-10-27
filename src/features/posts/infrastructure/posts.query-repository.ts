@@ -119,7 +119,6 @@ export class PostsQueryRepository {
   }
 
   postOutputMap(post: any) {
-    console.log(post);
     const { id, title, shortDescription, content, blogId, blogName, createdAt, extendedLikesInfoLikesCount, extendedLikesInfoDislikesCount} = post;
     return {
       id: id.toString(),
