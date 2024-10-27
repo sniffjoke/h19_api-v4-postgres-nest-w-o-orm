@@ -74,15 +74,14 @@ export class BlogsController {
     @Get('blogs/:id/posts')
     async getAllPostsByBlogId(@Param('id') id: string, @Query() query: any, @Req() req: Request) {
         const posts = await this.postsQueryRepository.getAllPostsWithQuery(query, id)
-        const postWithDetails = await this.postsService.generateOnePostWithLikesDetails(posts.items, req.headers.authorization as string)
-        console.log(postWithDetails);
+        const postWithDetails = await this.postsService.generatePostsWithLikesDetails(posts.items, req.headers.authorization as string)
         // return postWithDetails;
-        // const newData = await this.postsService.generatePostsWithLikesDetails(posts.items, req.headers.authorization as string)
-        // return {
-        //     ...posts,
-        //     items: newData
-        // };
-        return posts
+        const newData = await this.postsService.generatePostsWithLikesDetails(posts.items, req.headers.authorization as string)
+        return {
+            ...posts,
+            items: newData
+        };
+        // return posts
     }
 
     @Get('sa/blogs/:id/posts')
