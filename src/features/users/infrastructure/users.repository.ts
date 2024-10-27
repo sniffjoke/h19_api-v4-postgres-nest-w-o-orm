@@ -60,6 +60,13 @@ export class UsersRepository {
     return findedUser[0];
   }
 
+  async findUserByIdOrNull(id: string) {
+    const findedUser = await this.dataSource.query('SELECT * FROM users WHERE id = $1', [id]);
+    if (!findedUser.length) {
+      return findedUser[0];
+    } else return null
+  }
+
   async findUserByLogin(login: string) {
     const findedUser = await this.dataSource.query('SELECT * FROM users WHERE login = $1', [login]);
     if (!findedUser.length) {

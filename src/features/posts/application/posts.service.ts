@@ -70,7 +70,7 @@ export class PostsService {
     if (bearerHeader) {
       const token = this.tokensService.getToken(bearerHeader);
       const decodedToken = this.tokensService.decodeToken(token);
-      user = await this.usersRepository.findUserById(decodedToken._id);
+      user = await this.usersRepository.findUserByIdOrNull(decodedToken._id);
     } else {
       user = null;
     }
