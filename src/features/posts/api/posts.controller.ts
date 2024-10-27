@@ -40,9 +40,9 @@ export class PostsController {
 
   @Get('posts/:id')
   async getPostById(@Param('id') id: string, @Req() req: Request) {
-    const post = await this.postsQueryRepository.postOutput(id);
-    // const postWithDetails = await this.postsService.generateOnePostWithLikesDetails(post, req.headers.authorization as string)
-    return post;
+    const findedPost = await this.postsQueryRepository.postOutput(id);
+    const postWithDetails = await this.postsService.generateOnePostWithLikesDetails(findedPost, req.headers.authorization as string)
+    return postWithDetails;
   }
 
   @Put('sa/posts/:id')

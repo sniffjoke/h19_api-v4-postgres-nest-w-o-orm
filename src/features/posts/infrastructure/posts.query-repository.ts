@@ -118,8 +118,9 @@ export class PostsQueryRepository {
     return this.postOutputMap(findedPost[0]);
   }
 
-  postOutputMap(post: PostViewModel) {
-    const { id, title, shortDescription, content, blogId, blogName, createdAt } = post;
+  postOutputMap(post: any) {
+    console.log(post);
+    const { id, title, shortDescription, content, blogId, blogName, createdAt, extendedLikesInfoLikesCount, extendedLikesInfoDislikesCount} = post;
     return {
       id: id.toString(),
       title,
@@ -128,8 +129,8 @@ export class PostsQueryRepository {
       blogId,
       blogName,
       extendedLikesInfo: {
-        likesCount: 0,
-        dislikesCount: 0
+        likesCount: extendedLikesInfoLikesCount,
+        dislikesCount: extendedLikesInfoDislikesCount
       },
       createdAt,
     };

@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {PostsRepository} from "../infrastructure/posts.repository";
 import { PostCreateModel, PostCreateModelWithParams } from '../api/models/input/create-post.input.model';
-import {BlogsService} from "../../blogs/application/blogs.service";
 import { TokensService } from '../../tokens/application/tokens.service';
 import { LikeStatus, PostViewModel } from '../api/models/output/post.view.model';
-import { UsersService } from '../../users/application/users.service';
 import { BlogsRepository } from '../../blogs/infrastructure/blogs.repository';
 import { UsersRepository } from '../../users/infrastructure/users.repository';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -14,7 +12,6 @@ import { DataSource } from 'typeorm';
 export class PostsService {
     constructor(
         private readonly postsRepository: PostsRepository,
-        private readonly blogsService: BlogsService,
         private readonly tokensService: TokensService,
         private readonly usersRepository: UsersRepository,
         private readonly blogsRepository: BlogsRepository,
@@ -115,6 +112,7 @@ export class PostsService {
         )
         const myStatus = user && likeStatus ? likeStatus?.status : LikeStatus.None
         const postDataWithInfo = this.statusAndNewLikesPayload(post, myStatus, likeDetailsMap)
+      // console.log(postDataWithInfo);
         return postDataWithInfo
     }
 
@@ -124,8 +122,8 @@ export class PostsService {
         return {
             ...post,
             extendedLikesInfo: {
-                likesCount: post.extendedLikesInfoLikesCount,
-                dislikesCount: post.extendedLikesInfoDislikesCount,
+                likesCount: post.extendedLikesInfo.likesCount,
+                dislikesCount: post.extendedLikesInfo.dislikesCount,
                 myStatus: newStatus,
                 newestLikes: newLikes
             }
