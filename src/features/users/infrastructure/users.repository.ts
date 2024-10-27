@@ -63,8 +63,8 @@ export class UsersRepository {
   async findUserByIdOrNull(id: string) {
     const findedUser = await this.dataSource.query('SELECT * FROM users WHERE id = $1', [id]);
     if (!findedUser.length) {
-      return findedUser[0];
-    } else return null
+      return null
+    } else return findedUser[0];
   }
 
   async findUserByLogin(login: string) {

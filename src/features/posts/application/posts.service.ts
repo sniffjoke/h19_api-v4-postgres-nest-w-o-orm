@@ -81,12 +81,13 @@ export class PostsService {
     }
     const likeStatus = await this.dataSource.query(
       `
-            SELECT "status"
+            SELECT *
             FROM likes
             WHERE "postId" = $1 AND "userId" = $2  
       `,
       [post.id, user?.id],
     );
+    console.log(likeStatus);
     const likeDetails = await this.dataSource.query(
       `
                     SELECT *
@@ -108,7 +109,8 @@ export class PostsService {
         };
       }),
     );
-    const myStatus = user && likeStatus ? likeStatus[0].status : LikeStatus.None;
+    const myStatus = user && likeStatus.length ? likeStatus[0].status : LikeStatus.None;
+    console.log(myStatus);
     const postDataWithInfo = this.statusAndNewLikesPayload(post, myStatus, likeDetailsMap);
     return postDataWithInfo;
   }
