@@ -93,7 +93,6 @@ export class CommentsQueryRepository {
           `,
           [id]
         )
-        console.log(id);
         if (!findedComment.length) {
             throw new NotFoundException("Comment not found")
         }

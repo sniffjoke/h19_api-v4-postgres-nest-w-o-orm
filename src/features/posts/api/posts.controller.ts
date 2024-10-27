@@ -74,7 +74,6 @@ export class PostsController {
   @Get('posts/:id/comments')
   async getAllCommentsByPostId(@Param('id') id: string, @Query() query: any, @Req() req: Request) {
     const comments = await this.commentsQueryRepository.getAllCommentByPostIdWithQuery(query, id);
-    console.log(comments);
     const commentsMap = await this.commentsService.generateCommentsData(comments.items, req.headers.authorization as string)
     return {
       ...comments,
