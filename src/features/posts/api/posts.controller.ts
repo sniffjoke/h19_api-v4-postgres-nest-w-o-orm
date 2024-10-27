@@ -38,9 +38,9 @@ export class PostsController {
   async createPost(@Body() dto: PostCreateModel, @Req() req: Request) {
     const postId = await this.postsService.createPost(dto);
     const newPost = await this.postsQueryRepository.postOutput(postId);
-    // const postWithDetails = await this.postsService.generateOnePostWithLikesDetails(newPost, req.headers.authorization as string)
-    // return postWithDetails;
-    return newPost;
+    const postWithDetails = await this.postsService.generateOnePostWithLikesDetails(newPost, req.headers.authorization as string)
+    return postWithDetails;
+    // return newPost;
   }
 
   @Get('posts/:id')

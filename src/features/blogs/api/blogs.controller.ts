@@ -102,7 +102,9 @@ export class BlogsController {
     async createPostWithParams(@Body() dto: PostCreateModelWithParams, @Param('id') blogId: string, @Req() req: Request) {
         const postId = await this.postsService.createPost({...dto, blogId});
         const newPost = await this.postsQueryRepository.postOutput(postId);
-        return newPost
+        const postWithDetails = await this.postsService.generateOnePostWithLikesDetails(newPost, req.headers.authorization as string)
+        return postWithDetails;
+        // return newPost
     }
 
     @Put('sa/blogs/:blogId/posts/:postId')
@@ -110,7 +112,6 @@ export class BlogsController {
     @UseGuards(BasicAuthGuard)
     async updatePost(@Body() dto: PostCreateModelWithParams, @Param() idParams: any) {
         const updatePost = await this.blogsService.updatePostFromBlogsUri(idParams.postId, idParams.blogId, dto);
-        console.log(updatePost);
         return updatePost
     }
 
