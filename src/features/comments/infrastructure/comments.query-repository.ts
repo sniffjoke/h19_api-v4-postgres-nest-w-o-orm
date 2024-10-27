@@ -19,7 +19,17 @@ export class CommentsQueryRepository {
 
     async getAllCommentByPostIdWithQuery(query: any, postId: string) {
         const generateQuery = await this.generateQuery(query, postId)
-        const findedPost = await this.commentOutput(postId)
+        const findedPost = await this.dataSource.query(
+          `
+                    SELECT *
+                    FROM posts
+                    WHERE "id" = $1
+          `,
+          [postId]
+        )
+        if (!findedPost.length) {
+            throw new NotFoundException(`Post with id ${postId} not found`);
+        }
         const comments = await this.dataSource.query(
           `
                 SELECT * 
@@ -83,6 +93,7 @@ export class CommentsQueryRepository {
           `,
           [id]
         )
+        console.log(id);
         if (!findedComment.length) {
             throw new NotFoundException("Comment not found")
         }
